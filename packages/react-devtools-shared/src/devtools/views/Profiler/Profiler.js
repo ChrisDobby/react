@@ -10,6 +10,10 @@
 import React, {Fragment, useContext} from 'react';
 import {ModalDialog} from '../ModalDialog';
 import {ProfilerContext} from './ProfilerContext';
+import {
+  ProfilerSearchDispatcherContext,
+  ProfilerSearchStateContext,
+} from './ProfilerSearchContext';
 import TabBar from '../TabBar';
 import ClearProfilingDataButton from './ClearProfilingDataButton';
 import CommitFlamegraph from './CommitFlamegraph';
@@ -27,6 +31,7 @@ import SettingsModal from 'react-devtools-shared/src/devtools/views/Settings/Set
 import SettingsModalContextToggle from 'react-devtools-shared/src/devtools/views/Settings/SettingsModalContextToggle';
 import {SettingsModalContextController} from 'react-devtools-shared/src/devtools/views/Settings/SettingsModalContext';
 import portaledContent from '../portaledContent';
+import SearchInput from '../Components/SearchInput';
 
 import styles from './Profiler.css';
 
@@ -41,6 +46,9 @@ function Profiler(_: {||}) {
     selectTab,
     supportsProfiling,
   } = useContext(ProfilerContext);
+
+  const searchDispatch = useContext(ProfilerSearchDispatcherContext);
+  const searchState = useContext(ProfilerSearchStateContext);
 
   let view = null;
   if (didRecordCommits) {
@@ -120,6 +128,9 @@ function Profiler(_: {||}) {
                 <SnapshotSelector />
               </Fragment>
             )}
+          </div>
+          <div className={styles.Toolbar}>
+            <SearchInput dispatch={searchDispatch} state={searchState} />
           </div>
           <div className={styles.Content}>
             {view}

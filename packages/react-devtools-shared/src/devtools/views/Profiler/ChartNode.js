@@ -8,10 +8,12 @@
  */
 
 import React from 'react';
+import ChartDisplayLabel from './ChartDisplayLabel';
 
 import styles from './ChartNode.css';
 
 type Props = {|
+  id: number,
   color: string,
   height: number,
   isDimmed?: boolean,
@@ -28,6 +30,7 @@ type Props = {|
 const minWidthToDisplay = 35;
 
 export default function ChartNode({
+  id,
   color,
   height,
   isDimmed = false,
@@ -65,7 +68,7 @@ export default function ChartNode({
           }}
           y={0}>
           <div className={styles.Div} style={textStyle}>
-            {label}
+            <ChartDisplayLabel label={label} id={id} />
           </div>
         </foreignObject>
       )}

@@ -52,6 +52,7 @@ export default function Tree(props: Props) {
     ownerID,
     searchIndex,
     searchResults,
+    searchText,
     selectedElementID,
     selectedElementIndex,
   } = useContext(TreeStateContext);
@@ -326,7 +327,14 @@ export default function Tree(props: Props) {
             </Fragment>
           )}
           <Suspense fallback={<Loading />}>
-            {ownerID !== null ? <OwnersStack /> : <SearchInput />}
+            {ownerID !== null ? (
+              <OwnersStack />
+            ) : (
+              <SearchInput
+                dispatch={dispatch}
+                state={{searchResults, searchIndex, searchText}}
+              />
+            )}
           </Suspense>
           <div className={styles.VRule} />
           <SettingsModalContextToggle />

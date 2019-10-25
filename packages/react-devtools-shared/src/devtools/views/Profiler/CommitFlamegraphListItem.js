@@ -97,6 +97,7 @@ function CommitFlamegraphListItem({data, index, style}: Props) {
 
         return (
           <ChartNode
+            id={id}
             color={color}
             height={lineHeight}
             isDimmed={index < selectedChartNodeIndex}

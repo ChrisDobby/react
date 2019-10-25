@@ -7,10 +7,11 @@
  * @flow
  */
 
-import React, {useCallback, useContext, useMemo} from 'react';
+import React, {useCallback, useContext, useEffect, useMemo} from 'react';
 import AutoSizer from 'react-virtualized-auto-sizer';
 import {FixedSizeList} from 'react-window';
 import {ProfilerContext} from './ProfilerContext';
+import {ProfilerSearchDispatcherContext} from './ProfilerSearchContext';
 import InteractionListItem from './InteractionListItem';
 import NoInteractions from './NoInteractions';
 import {StoreContext} from '../context';
@@ -53,6 +54,7 @@ function Interactions({height, width}: {|height: number, width: number|}) {
   } = useContext(ProfilerContext);
   const {profilerStore} = useContext(StoreContext);
   const {profilingCache} = profilerStore;
+  const searchDispatch = useContext(ProfilerSearchDispatcherContext);
 
   const dataForRoot = profilerStore.getDataForRoot(((rootID: any): number));
 
@@ -61,6 +63,21 @@ function Interactions({height, width}: {|height: number, width: number|}) {
   });
 
   const {interactions} = chartData;
+
+  useEffect(
+    () => {
+      if (chartData !== null) {
+        searchDispatch({
+          type: 'SET_CHART_DATA',
+          payload: {
+            data: chartData.interactions,
+            selectNode: node => selectInteraction(node.id),
+          },
+        });
+      }
+    },
+    [chartData, searchDispatch],
+  );
 
   const handleKeyDown = useCallback(
     event => {

@@ -26,6 +26,7 @@ import {ModalDialogContextController} from './ModalDialog';
 import ReactLogo from './ReactLogo';
 import UnsupportedVersionDialog from './UnsupportedVersionDialog';
 import WarnIfLegacyBackendDetected from './WarnIfLegacyBackendDetected';
+import {ProfilerSearchContextController} from './Profiler/ProfilerSearchContext';
 
 import styles from './DevTools.css';
 
@@ -134,34 +135,38 @@ export default function DevTools({
             <ViewElementSourceContext.Provider value={viewElementSource}>
               <TreeContextController>
                 <ProfilerContextController>
-                  <div className={styles.DevTools}>
-                    {showTabBar && (
-                      <div className={styles.TabBar}>
-                        <ReactLogo />
-                        <span className={styles.DevToolsVersion}>
-                          {process.env.DEVTOOLS_VERSION}
-                        </span>
-                        <div className={styles.Spacer} />
-                        <TabBar
-                          currentTab={tab}
-                          id="DevTools"
-                          selectTab={setTab}
-                          tabs={tabs}
-                          type="navigation"
+                  <ProfilerSearchContextController>
+                    <div className={styles.DevTools}>
+                      {showTabBar && (
+                        <div className={styles.TabBar}>
+                          <ReactLogo />
+                          <span className={styles.DevToolsVersion}>
+                            {process.env.DEVTOOLS_VERSION}
+                          </span>
+                          <div className={styles.Spacer} />
+                          <TabBar
+                            currentTab={tab}
+                            id="DevTools"
+                            selectTab={setTab}
+                            tabs={tabs}
+                            type="navigation"
+                          />
+                        </div>
+                      )}
+                      <div
+                        className={styles.TabContent}
+                        hidden={tab !== 'components'}>
+                        <Components
+                          portalContainer={componentsPortalContainer}
                         />
                       </div>
-                    )}
-                    <div
-                      className={styles.TabContent}
-                      hidden={tab !== 'components'}>
-                      <Components portalContainer={componentsPortalContainer} />
+                      <div
+                        className={styles.TabContent}
+                        hidden={tab !== 'profiler'}>
+                        <Profiler portalContainer={profilerPortalContainer} />
+                      </div>
                     </div>
-                    <div
-                      className={styles.TabContent}
-                      hidden={tab !== 'profiler'}>
-                      <Profiler portalContainer={profilerPortalContainer} />
-                    </div>
-                  </div>
+                  </ProfilerSearchContextController>
                 </ProfilerContextController>
               </TreeContextController>
             </ViewElementSourceContext.Provider>

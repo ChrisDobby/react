@@ -1,0 +1,6 @@
+.Highlight {
+    background-color: var(--color-search-match);
+  }
+  .CurrentHighlight {
+    background-color: var(--color-search-match-current);
+  }

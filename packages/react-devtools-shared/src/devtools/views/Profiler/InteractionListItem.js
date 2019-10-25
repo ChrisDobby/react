@@ -10,6 +10,7 @@
 import React, {memo, useCallback} from 'react';
 import {areEqual} from 'react-window';
 import {getGradientColor} from './utils';
+import ChartDisplayLabel from './ChartDisplayLabel';
 
 import styles from './InteractionListItem.css';
 
@@ -71,7 +72,7 @@ function InteractionListItem({data: itemData, index, style}: Props) {
         className={styles.Name}
         style={{maxWidth: labelWidth}}
         title={interaction.name}>
-        {interaction.name}
+        <ChartDisplayLabel id={interaction.id} label={interaction.name} />
       </div>
       <div
         className={styles.InteractionLine}

@@ -7,10 +7,17 @@
  * @flow
  */
 
-import React, {forwardRef, useCallback, useContext, useMemo} from 'react';
+import React, {
+  forwardRef,
+  useCallback,
+  useContext,
+  useEffect,
+  useMemo,
+} from 'react';
 import AutoSizer from 'react-virtualized-auto-sizer';
 import {FixedSizeList} from 'react-window';
 import {ProfilerContext} from './ProfilerContext';
+import {ProfilerSearchDispatcherContext} from './ProfilerSearchContext';
 import NoCommitData from './NoCommitData';
 import CommitFlamegraphListItem from './CommitFlamegraphListItem';
 import {scale} from './utils';
@@ -37,6 +44,7 @@ export default function CommitFlamegraphAutoSizer(_: {||}) {
     ProfilerContext,
   );
   const {profilingCache} = profilerStore;
+  const searchDispatch = useContext(ProfilerSearchDispatcherContext);
 
   const deselectCurrentFiber = useCallback(
     event => {
@@ -60,6 +68,21 @@ export default function CommitFlamegraphAutoSizer(_: {||}) {
       rootID: ((rootID: any): number),
     });
   }
+
+  useEffect(
+    () => {
+      if (chartData !== null) {
+        searchDispatch({
+          type: 'SET_CHART_DATA',
+          payload: {
+            data: chartData.rows,
+            selectNode: node => selectFiber(node.id, node.name),
+          },
+        });
+      }
+    },
+    [chartData, searchDispatch],
+  );
 
   if (commitTree != null && chartData != null && chartData.depth > 0) {
     return (

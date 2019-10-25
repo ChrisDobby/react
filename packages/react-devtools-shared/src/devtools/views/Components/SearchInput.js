@@ -7,19 +7,29 @@
  * @flow
  */
 
-import React, {useCallback, useContext, useEffect, useRef} from 'react';
-import {TreeDispatcherContext, TreeStateContext} from './TreeContext';
+import React, {useCallback, useEffect, useRef} from 'react';
 import Button from '../Button';
 import ButtonIcon from '../ButtonIcon';
 import Icon from '../Icon';
 
 import styles from './SearchInput.css';
 
-type Props = {||};
+type Action = {|
+  type: string,
+  payload?: any,
+|};
 
-export default function SearchInput(props: Props) {
-  const {searchIndex, searchResults, searchText} = useContext(TreeStateContext);
-  const dispatch = useContext(TreeDispatcherContext);
+type Props = {|
+  dispatch: (action: Action) => void,
+  state: {
+    searchIndex: number | null,
+    searchResults: Array<string>,
+    searchText: string,
+  },
+|};
+
+export default function SearchInput({dispatch, state}: Props) {
+  const {searchIndex, searchResults, searchText} = state;
 
   const inputRef = useRef<HTMLInputElement | null>(null);
 

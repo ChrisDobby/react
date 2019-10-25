@@ -7,10 +7,11 @@
  * @flow
  */
 
-import React, {useCallback, useContext, useMemo} from 'react';
+import React, {useCallback, useContext, useEffect, useMemo} from 'react';
 import AutoSizer from 'react-virtualized-auto-sizer';
 import {FixedSizeList} from 'react-window';
 import {ProfilerContext} from './ProfilerContext';
+import {ProfilerSearchDispatcherContext} from './ProfilerSearchContext';
 import NoCommitData from './NoCommitData';
 import CommitRankedListItem from './CommitRankedListItem';
 import {scale} from './utils';
@@ -37,6 +38,7 @@ export default function CommitRankedAutoSizer(_: {||}) {
     ProfilerContext,
   );
   const {profilingCache} = profilerStore;
+  const searchDispatch = useContext(ProfilerSearchDispatcherContext);
 
   const deselectCurrentFiber = useCallback(
     event => {
@@ -60,6 +62,21 @@ export default function CommitRankedAutoSizer(_: {||}) {
       rootID: ((rootID: any): number),
     });
   }
+
+  useEffect(
+    () => {
+      if (chartData !== null) {
+        searchDispatch({
+          type: 'SET_CHART_DATA',
+          payload: {
+            data: chartData.nodes,
+            selectNode: node => selectFiber(node.id, node.name),
+          },
+        });
+      }
+    },
+    [chartData, searchDispatch],
+  );
 
   if (commitTree != null && chartData != null && chartData.nodes.length > 0) {
     return (
