@@ -13,6 +13,7 @@ import {
   ElementTypeMemo,
   ElementTypeForwardRef,
 } from 'react-devtools-shared/src/types';
+import DisplayName from './DisplayName';
 import styles from './Badge.css';
 
 import type {ElementType} from 'react-devtools-shared/src/types';
@@ -21,9 +22,10 @@ type Props = {|
   className?: string,
   hocDisplayNames: Array<string> | null,
   type: ElementType,
+  id?: number,
 |};
 
-export default function Badge({className, hocDisplayNames, type}: Props) {
+export default function Badge({className, hocDisplayNames, type, id}: Props) {
   let hocDisplayName = null;
   let totalBadgeCount = 0;
   let typeLabel = null;
@@ -45,11 +47,15 @@ export default function Badge({className, hocDisplayNames, type}: Props) {
     return null;
   }
 
+  const displayName = id ? (
+    <DisplayName displayName={hocDisplayName || typeLabel} id={id} />
+  ) : (
+    hocDisplayName || typeLabel
+  );
+
   return (
     <Fragment>
-      <div className={`${styles.Badge} ${className || ''}`}>
-        {hocDisplayName || typeLabel}
-      </div>
+      <div className={`${styles.Badge} ${className || ''}`}>{displayName}</div>
       {totalBadgeCount > 1 && (
         <div className={styles.ExtraLabel}>+{totalBadgeCount - 1}</div>
       )}

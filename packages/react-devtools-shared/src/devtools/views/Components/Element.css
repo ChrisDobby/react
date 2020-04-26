@@ -55,13 +55,6 @@
   text-overflow: ellipsis;
 }
 
-.Highlight {
-  background-color: var(--color-search-match);
-}
-.CurrentHighlight {
-  background-color: var(--color-search-match-current);
-}
-
 .ExpandCollapseToggle {
   display: inline-flex;
   width: 1rem;
