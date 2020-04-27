@@ -318,6 +318,37 @@ describe('TreeListContext', () => {
       expect(state).toMatchSnapshot('5: search for "w"');
     });
 
+    it('should find Memo and ForwardRef HOCs', () => {
+      const Foo = React.memo(() => null);
+      const Bar = () => null;
+      const Baz = React.forwardRef(() => null);
+
+      utils.act(() =>
+        ReactDOM.render(
+          <React.Fragment>
+            <Foo />
+            <Bar />
+            <Baz />
+          </React.Fragment>,
+          document.createElement('div'),
+        ),
+      );
+
+      expect(store).toMatchSnapshot('0: mount');
+
+      let renderer;
+      utils.act(() => (renderer = TestRenderer.create(<Contexts />)));
+      expect(state).toMatchSnapshot('1: initial state');
+
+      utils.act(() => dispatch({type: 'SET_SEARCH_TEXT', payload: 'me'}));
+      utils.act(() => renderer.update(<Contexts />));
+      expect(state).toMatchSnapshot('2: search for "me"');
+
+      utils.act(() => dispatch({type: 'SET_SEARCH_TEXT', payload: 'for'}));
+      utils.act(() => renderer.update(<Contexts />));
+      expect(state).toMatchSnapshot('3: search for "for"');
+    });
+
     it('should select the next and previous items within the search results', () => {
       const Foo = () => null;
       const Bar = () => null;

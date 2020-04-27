@@ -13,6 +13,7 @@ import {
   ElementTypeMemo,
 } from 'react-devtools-shared/src/types';
 import styles from './HocBadges.css';
+import {systemHocLabels} from '../../utils';
 
 import type {Element} from './types';
 
@@ -25,9 +26,9 @@ export default function HocBadges({element}: Props) {
 
   let typeBadge = null;
   if (type === ElementTypeMemo) {
-    typeBadge = 'Memo';
+    typeBadge = systemHocLabels[ElementTypeMemo];
   } else if (type === ElementTypeForwardRef) {
-    typeBadge = 'ForwardRef';
+    typeBadge = systemHocLabels[ElementTypeForwardRef];
   }
 
   if (hocDisplayNames === null && typeBadge === null) {

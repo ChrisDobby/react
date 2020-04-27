@@ -43,6 +43,7 @@ import {
 import {createRegExp} from '../utils';
 import {BridgeContext, StoreContext} from '../context';
 import Store from '../../store';
+import {systemHocLabels} from '../../utils';
 
 import type {Element} from './types';
 
@@ -783,16 +784,21 @@ function recursivelySearchTree(
   regExp: RegExp,
   searchResults: Array<number>,
 ): void {
-  const {children, displayName, hocDisplayNames} = ((store.getElementByID(
+  const {children, displayName, hocDisplayNames, type} = ((store.getElementByID(
     elementID,
   ): any): Element);
+
+  const typeHocLabel = systemHocLabels[type];
+  const allHocDisplayNames = typeHocLabel
+    ? [...(hocDisplayNames || []), typeHocLabel]
+    : hocDisplayNames;
 
   if (displayName != null && regExp.test(displayName) === true) {
     searchResults.push(elementID);
   } else if (
-    hocDisplayNames != null &&
-    hocDisplayNames.length > 0 &&
-    hocDisplayNames.some(name => regExp.test(name)) === true
+    allHocDisplayNames != null &&
+    allHocDisplayNames.length > 0 &&
+    allHocDisplayNames.some(name => regExp.test(name)) === true
   ) {
     searchResults.push(elementID);
   }

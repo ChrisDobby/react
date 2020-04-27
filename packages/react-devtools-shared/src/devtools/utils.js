@@ -15,6 +15,11 @@ import {
 import type {Element} from './views/Components/types';
 import type Store from './store';
 
+export const systemHocLabels = {
+  [ElementTypeMemo]: 'Memo',
+  [ElementTypeForwardRef]: 'ForwardRef',
+};
+
 export function printElement(element: Element, includeWeight: boolean = false) {
   let prefix = ' ';
   if (element.children.length > 0) {
@@ -32,15 +37,15 @@ export function printElement(element: Element, includeWeight: boolean = false) {
   }
   if (element.type === ElementTypeMemo) {
     if (hocDisplayNames === null) {
-      hocDisplayNames = ['Memo'];
+      hocDisplayNames = [systemHocLabels[ElementTypeMemo]];
     } else {
-      hocDisplayNames.push('Memo');
+      hocDisplayNames.push(systemHocLabels[ElementTypeMemo]);
     }
   } else if (element.type === ElementTypeForwardRef) {
     if (hocDisplayNames === null) {
-      hocDisplayNames = ['ForwardRef'];
+      hocDisplayNames = [systemHocLabels[ElementTypeForwardRef]];
     } else {
-      hocDisplayNames.push('ForwardRef');
+      hocDisplayNames.push(systemHocLabels[ElementTypeForwardRef]);
     }
   }
 
