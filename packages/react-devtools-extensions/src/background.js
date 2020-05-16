@@ -29,6 +29,9 @@ chrome.runtime.onConnect.addListener(function(port) {
   if (ports[tab].devtools && ports[tab]['content-script']) {
     doublePipe(ports[tab].devtools, ports[tab]['content-script']);
   }
+
+  addContextMenuItems(tab);
+  port.onDisconnect.addListener(() => chrome.contextMenus.removeAll());
 });
 
 function isNumeric(str: string): boolean {
@@ -112,4 +115,29 @@ chrome.runtime.onMessage.addListener((request, sender) => {
       setIconAndPopup(reactBuildType, sender.tab.id);
     }
   }
+});
+
+// Right-click inspect context menu entry
+chrome.tabs.onActivated.addListener(({tabId}) => {
+  addContextMenuItems(tabId);
+});
+
+function addContextMenuItems(tabId) {
+  chrome.contextMenus.removeAll(() => {
+    if (ports[tabId]) {
+      chrome.contextMenus.create({
+        id: 'react-inspect-component',
+        title: 'Inspect React component',
+        contexts: ['all'],
+      });
+    }
+  });
+}
+
+chrome.contextMenus.onClicked.addListener((info, tab) => {
+  chrome.runtime.sendMessage({
+    reactContextMenu: {
+      id: info.menuItemId,
+    },
+  });
 });

@@ -1,3 +1,5 @@
+/* global chrome */
+
 // Portal target container.
 window.container = document.getElementById('container');
 
@@ -16,4 +18,12 @@ window.injectStyles = getLinkTags => {
       document.head.appendChild(linkTag);
     }
   }
+};
+
+window.injectContextMenuHandler = bridge => {
+  chrome.runtime.onMessage.addListener(request => {
+    if (request === 'react-select-context-menu-target') {
+      bridge.send('selectContextMenuTarget');
+    }
+  });
 };

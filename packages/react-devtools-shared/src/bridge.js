@@ -107,6 +107,7 @@ type BackendEvents = {|
     {|isSupported: boolean, validAttributes: ?$ReadOnlyArray<string>|},
   ],
   NativeStyleEditor_styleAndLayout: [StyleAndLayoutPayload],
+  selectContextMenuTarget: [number],
 |};
 
 type FrontendEvents = {|

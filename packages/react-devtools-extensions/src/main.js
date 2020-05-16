@@ -291,6 +291,8 @@ function createPanelIfReactLoaded() {
       });
 
       let currentPanel = null;
+      let componentsPanelVisible = false;
+      let onComponentsPanelShow = null;
       let needsToSyncElementSelection = false;
 
       chrome.devtools.panels.create(
@@ -299,9 +301,15 @@ function createPanelIfReactLoaded() {
         'panel.html',
         extensionPanel => {
           extensionPanel.onShown.addListener(panel => {
+            componentsPanelVisible = true;
             if (needsToSyncElementSelection) {
               needsToSyncElementSelection = false;
               bridge.send('syncSelectionFromNativeElementsPanel');
+            }
+
+            if (onComponentsPanelShow) {
+              onComponentsPanelShow();
+              onComponentsPanelShow = null;
             }
 
             if (currentPanel === panel) {
@@ -315,9 +323,11 @@ function createPanelIfReactLoaded() {
               ensureInitialHTMLIsCleared(componentsPortalContainer);
               render('components');
               panel.injectStyles(cloneStyleTags);
+              panel.injectContextMenuHandler(bridge);
             }
           });
           extensionPanel.onHidden.addListener(panel => {
+            componentsPanelVisible = false;
             // TODO: Stop highlighting and stuff.
           });
         },
@@ -358,6 +368,39 @@ function createPanelIfReactLoaded() {
         flushSync(() => root.unmount());
 
         initBridgeAndStore();
+      });
+
+      function handleContextMenu({id}) {
+        if (id !== 'react-inspect-component') {
+          return;
+        }
+
+        chrome.devtools.inspectedWindow.eval(
+          `window.__REACT_DEVTOOLS_CONTEXT_MENU_TARGET_FIBER_ID__`,
+          function(response, evalError) {
+            if (evalError) {
+              console.log(evalError);
+            }
+            if (!response) {
+              onComponentsPanelShow = null;
+              return;
+            }
+
+            const action = () =>
+              chrome.runtime.sendMessage('react-select-context-menu-target');
+            if (componentsPanelVisible) {
+              action();
+            } else {
+              onComponentsPanelShow = action;
+            }
+          },
+        );
+      }
+
+      chrome.runtime.onMessage.addListener((request, sender) => {
+        if (request.reactContextMenu) {
+          handleContextMenu(request.reactContextMenu);
+        }
       });
     },
   );

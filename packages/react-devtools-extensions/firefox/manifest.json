@@ -44,7 +44,7 @@
     "scripts": ["build/background.js"]
   },
 
-  "permissions": ["file:///*", "http://*/*", "https://*/*", "clipboardWrite"],
+  "permissions": ["file:///*", "http://*/*", "https://*/*", "clipboardWrite", "contextMenus"],
 
   "content_scripts": [
     {

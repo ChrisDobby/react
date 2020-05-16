@@ -75,6 +75,14 @@ function setup(hook) {
   // This covers the case of of syncing saved values after reloading/navigating while DevTools remain open.
   bridge.send('extensionBackendInitialized');
 
+  bridge.addListener('selectContextMenuTarget', () => {
+    const fiberID = window.__REACT_DEVTOOLS_CONTEXT_MENU_TARGET_FIBER_ID__;
+    if (fiberID) {
+      bridge.send('selectFiber', fiberID);
+    }
+    window.__REACT_DEVTOOLS_CONTEXT_MENU_TARGET_FIBER_ID__ = null;
+  });
+
   // Setup React Native style editor if a renderer like react-native-web has injected it.
   if (hook.resolveRNStyle) {
     setupNativeStyleEditor(

@@ -116,6 +116,11 @@ export function initBackend(
     agent.removeListener('shutdown', onAgentShutdown);
   });
 
+  document.addEventListener('contextmenu', (el: MouseEvent) => {
+    window.__REACT_DEVTOOLS_CONTEXT_MENU_TARGET_FIBER_ID__ =
+      agent.getIDForNode(el.target) || null;
+  });
+
   return () => {
     subs.forEach(fn => fn());
   };
