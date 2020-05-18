@@ -29,6 +29,7 @@ function setup(hook) {
   const Agent = require('react-devtools-shared/src/backend/agent').default;
   const Bridge = require('react-devtools-shared/src/bridge').default;
   const {initBackend} = require('react-devtools-shared/src/backend');
+  const {injectToast} = require('./toast');
   const setupNativeStyleEditor = require('react-devtools-shared/src/backend/NativeStyleEditor/setupNativeStyleEditor')
     .default;
 
@@ -92,4 +93,6 @@ function setup(hook) {
       hook.nativeStyleEditorValidAttributes,
     );
   }
+
+  injectToast(window);
 }

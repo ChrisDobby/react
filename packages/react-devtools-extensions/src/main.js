@@ -16,6 +16,7 @@ import {
   localStorageSetItem,
 } from 'react-devtools-shared/src/storage';
 import DevTools from 'react-devtools-shared/src/devtools/views/DevTools';
+import {showToast} from './toast';
 
 const LOCAL_STORAGE_SUPPORTS_PROFILING_KEY =
   'React::DevTools::supportsProfiling';
@@ -382,6 +383,7 @@ function createPanelIfReactLoaded() {
               console.log(evalError);
             }
             if (!response) {
+              showToast('No React component found', 'warning');
               onComponentsPanelShow = null;
               return;
             }
@@ -391,6 +393,9 @@ function createPanelIfReactLoaded() {
             if (componentsPanelVisible) {
               action();
             } else {
+              showToast(
+                'Open the React components tab to view selected details',
+              );
               onComponentsPanelShow = action;
             }
           },
